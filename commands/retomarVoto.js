@@ -31,7 +31,7 @@ exports.run = (client, msg, args) => {
       return false;
     }
 
-    client.guilds.cache.get(config.guild.find(g => g.id === msg.guild.id).id).channels.cache.get('754491811296444448').messages.fetch(id)
+    client.guilds.cache.get(config.guildID).channels.cache.get('754491811296444448').messages.fetch(id)
       .then(async message => {
         const filter = (reaction, user) => {
           return (reaction.emoji.name === '1️⃣' || reaction.emoji.name === '2️⃣' || reaction.emoji.name === '3️⃣' || reaction.emoji.name === '4️⃣') && user.id !== process.env.DIEGOBOTID;
