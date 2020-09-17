@@ -1,37 +1,27 @@
 const Discord = require('discord.js');
-
-const utils = require('../utils/utils');
-const config = require('../config/config.json');
 const fs = require('fs');
 const path = require('path');
 
+const utils = require('../utils/utils');
+const config = require('../config/config.json');
+
 exports.run = async (client, msg, args) => {
-  // sendHelp
   if (args.find(arg => (arg.name === 'help' || arg.name === 'h') && arg.value.toString() === 'true')) {
     return msg.channel.send(new Discord.MessageEmbed()
-      .setTitle('.quote')
+      .setTitle(`${ config.prefix }quote`)
       .setDescription('Retorna ou adiciona uma citação.')
       .addField('**Aliases**', '``citacao``\n``citação``\n``q``', true)
       .addField('**Argumentos**', '``Número (number)``\n``-add | -a (messageID)``', true)
-      .addField('**Como usar**', '``quote [númeroDaQuote] [-add idDaMensagem]``')
+      .addField('**Como usar**', `\`\`${ config.prefix }quote [númeroDaQuote] [-add idDaMensagem]\`\``)
       .addField('**Permissão**', '``Todos``', true)
-      .setColor('#ff81f8')
-      .setFooter('.help')
+      .setColor(config.botColor)
+      .setFooter(`${ config.prefix }help`)
     );
   }
 
-  const storedGuild = config.guild.find(g => g.id === msg.guild.id);
-  let guildID;
+  const messageID = args.find(arg => arg.name === 'string1') ? args.find(arg => arg.name === 'string1').value : undefined;
 
-  if (storedGuild) {
-    guildID = storedGuild.id;
-  } else {
-    guildID = msg.guild.id;
-  }
-
-  const messageID = args.find(arg => arg.name === 'number1') ? args.find(arg => arg.name === 'number1').value : undefined;
-
-  if (args.find(arg => (arg.name === 'add' || arg.name === 'a') && arg.value.toString() === 'true')) {
+  if (args.find(arg => (arg.name === 'add' || arg.name === 'a') && arg.value)) {
     let message;
 
     for await (value of msg.guild.channels.cache.values()) {
@@ -54,30 +44,18 @@ exports.run = async (client, msg, args) => {
       return msg.channel.send(utils.showError(404));
     }
 
-    const existingQuote = storedGuild ? storedGuild.quotes.find(quote => quote.id === messageID) : undefined;
+    const existingQuote = config.quotes.find(quote => quote.id === messageID);
 
     if (existingQuote) {
       return msg.channel.send(`Essa citação já foi adicionada!\n\`\`${existingQuote.author}\`\`: ${existingQuote.quote}`);
     }
-    
-    if (!storedGuild) {
-      config.guild.push({
-        id: guildID,
-        quotes: [{
-          id: message.id,
-          quote: message.content,
-          author: message.author.username,
-          createdBy: msg.author.username
-        }]
-      });
-    } else {
-      storedGuild.quotes.push({
-        id: message.id,
-        quote: message.content,
-        author: message.author.username,
-        createdBy: msg.author.username
-      });
-    }
+
+    config.quotes.push({
+      id: message.id,
+      quote: message.content,
+      author: message.author.username,
+      createdBy: msg.author.username
+    });
 
     fs.writeFileSync(path.join(__dirname, '../config/config.json'), JSON.stringify(config), (err) => {
       if (err) {
@@ -86,17 +64,15 @@ exports.run = async (client, msg, args) => {
     });
 
     return msg.channel.send(`Citação adicionada com sucesso! ` +
-      `Use \`\`.quote ${storedGuild ? storedGuild.quotes.length - 1 : 0}\`\` para ver a citação.`);
+      `Use \`\`${ config.prefix }quote ${ config.quotes.length }\`\` para ver a citação.`);
   }
 
-  const number = args.find(arg => arg.name === 'number1') ? args.find(arg => arg.name === 'number1').value : undefined;
+  const number = args.find(arg => arg.name === 'string1') ? args.find(arg => arg.name === 'string1').value : undefined;
 
-  if (storedGuild) {
-    const quote = storedGuild.quotes[parseInt(number)];
-
-    if (quote) {
-      return msg.channel.send(`\`\`${quote.author}\`\`: \`\`${quote.quote}\`\``);
-    }
+  const quote = config.quotes[parseInt(number)];
+  
+  if (quote) {
+    return msg.channel.send(`\`\`${quote.author}\`\`: \`\`${quote.quote}\`\``);
   }
 
   if (!messageID && !number) {

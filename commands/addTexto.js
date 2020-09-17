@@ -2,19 +2,19 @@ const Discord = require('discord.js');
 
 const utils = require('../utils/utils');
 const canvas = require('../utils/canvas');
+const config = require('../config/config.json');
 
 exports.run = async (client, msg, args) => {
-  // sendHelp
   if (args.length > 0 && args.find(arg => (arg.name === 'help' || arg.name === 'h') && arg.value.toString() === 'true')) {
     return msg.channel.send(new Discord.MessageEmbed()
-      .setTitle('.addTexto')
+      .setTitle(`${ config.prefix }addTexto`)
       .setDescription('Adiciona um texto à uma dada imagem.')
       .addField('**Aliases**', '``at``\n``addText``\n``addT``', true)
       .addField('**Argumentos**', '``Imagem (link/image)``\n``Texto (string)``\n``color | c (string)``\n``size | s (number)``\n``font | f (string)``', true)
-      .addField('**Como usar**', '``addTexto [imagem] [texto] [-color cor] [-size tamanho] [-font fonte]``')
+      .addField('**Como usar**', `\`\`${ config.prefix }addTexto [imagem] [texto] [-color cor] [-size tamanho] [-font fonte]\`\``)
       .addField('**Permissão**', '``Todos``', true)
-      .setColor('#ff81f8')
-      .setFooter('.help')
+      .setColor(config.botColor)
+      .setFooter(`${ config.prefix }help`)
     );
   }
 
@@ -48,8 +48,8 @@ exports.run = async (client, msg, args) => {
   return msg.channel.send(new Discord.MessageEmbed()
     .attachFiles(attachment)
     .setImage('attachment://img.png')
-    .setAuthor(`Imagem por: ${msg.member.nickname ? msg.member.nickname : msg.member.user.username}`)
-    .setColor('#ff81f8')
+    .setAuthor(`Imagem por: ${ msg.member.nickname ? msg.member.nickname : msg.member.user.username }`)
+    .setColor(config.botColor)
   );
 };
 

@@ -1,18 +1,19 @@
 const Discord = require('discord.js');
 const fs = require('fs');
 
+const config = require('../config/config.json');
+
 exports.run = (client, msg, args) => {
-  // sendHelp
   if (args.find(arg => (arg.name === 'help' || arg.name === 'h') && arg.value.toString() === 'true')) {
     return msg.channel.send(new Discord.MessageEmbed()
-      .setTitle('.help')
+      .setTitle(`${ config.prefix }help`)
       .setDescription('Retorna a descrição do bot, e uma lista de comandos. Também serve para retornar a descrição de cada comando. Exemplo: \`\`.help [comando]\`\`')
       .addField('**Aliases**', '``h``', true)
       .addField('**Argumentos**', '``Comando (string)``', true)
-      .addField('**Como usar**', '``help [comando]``')
+      .addField('**Como usar**', `\`\`${ config.prefix }help [comando]\`\``)
       .addField('**Permissão**', '``Todos``', true)
-      .setColor('#ff81f8')
-      .setFooter('.help')
+      .setColor(config.botColor)
+      .setFooter(`${ config.prefix }help`)
     );
   }
 
@@ -41,14 +42,14 @@ exports.run = (client, msg, args) => {
       command = require(`./${command}`);
 
       return msg.channel.send(new Discord.MessageEmbed()
-        .setTitle(`.${command.help.name}`)
+        .setTitle(`${ config.prefix }${command.help.name}`)
         .setDescription(command.help.description)
         .addField('**Aliases: **', command.help.aliases.length > 0 ? command.help.aliases.map(alias => `\`\`${alias}\`\``) : 'Não possui aliases.', true)
         .addField('**Argumentos: **', command.help.args.length > 0 ? command.help.args.map(a => (a.alias ? `\`\`${ a.name }` + ' | ' + a.alias : `\`\`${ a.name }`) + (a.expects ? ' (' + a.expects + ')``' : '``')) : '``Não possui argumentos.``', true)
-        .addField('**Como usar**', `\`\`${ command.help.usage }\`\``)
+        .addField('**Como usar**', `\`\`${ config.prefix }${ command.help.usage }\`\``)
         .addField('**Permissão**', `\`\`${ command.help.permission }\`\``, true)
-        .setColor('#ff81f8')
-        .setFooter('.help')
+        .setColor(config.botColor)
+        .setFooter(`${ config.prefix }help`)
       );
     }
   }
@@ -68,12 +69,13 @@ exports.run = (client, msg, args) => {
   });
 
   const embed = new Discord.MessageEmbed()
-    .setTitle('Gominho')
-    .setDescription('Mascote e assistente pessoal do Video Gomes!')
+    .setTitle(config.botName)
+    .setDescription(config.botDescription)
     .addFields(help)
-    .setColor('#ff81f8')
+    .setColor(config.botColor)
     .setThumbnail(client.user.avatarURL())
-    .setTimestamp();
+    .setTimestamp()
+    .setFooter(`${ config.prefix }help`)
 
   return msg.channel.send(embed);
 };

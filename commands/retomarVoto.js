@@ -6,21 +6,20 @@ const config = require('../config/config.json');
 const utils = require('../utils/utils');
 
 exports.run = (client, msg, args) => {
-  // sendHelp
   if (args.find(arg => (arg.name === 'help' || arg.name === 'h') && arg.value.toString() === 'true')) {
     return msg.channel.send(new Discord.MessageEmbed()
-      .setTitle('.retomarVoto')
+      .setTitle(`${ config.prefix }retomarVoto`)
       .setDescription('Retoma uma votação pausada.')
       .addField('**Aliases**', '``Não possui aliases.``', true)
       .addField('**Argumentos**', '``ID da Mensagem (messageID)``', true)
-      .addField('**Como usar**', '``retomarVoto [idDaMensagem]``')
+      .addField('**Como usar**', `\`\`${ config.prefix }retomarVoto [idDaMensagem]\`\``)
       .addField('**Permissão**', '``Administrador``', true)
-      .setColor('#ff81f8')
-      .setFooter('.help')
+      .setColor(config.prefix)
+      .setFooter(`${ config.prefix }help`)
     );
   }
 
-  if (config.guild.find(g => g.id === msg.guild.id).sugestoes.length >= 4) {
+  if (config.sugestoes.length >= 4) {
     let date = Date.now();
 
     date = new Date('Fri Sep 18 2020 07:34:16 GMT-0300');
@@ -87,7 +86,7 @@ exports.run = (client, msg, args) => {
               .setTitle('Votação encerrada!')
               .addField('Resultado: ', collected.size > 0 ? collected.map(reaction => `\n${reaction._emoji.name}: ${reaction.count - 1}`) : 'Nada')
               .addField('Clique aqui para ver as opções:', `[Navegar!](${message.url})`)
-              .setColor('#ff81f8'))
+              .setColor(config.botColor))
             .then(() => {
               fs.writeFileSync(path.join(__dirname, '..', 'config', 'config.json'), JSON.stringify(config), err => {
                 if (err) {

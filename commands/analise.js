@@ -1,19 +1,18 @@
 const Discord = require('discord.js');
 
-const utils = require('../utils/utils');
+const config = require('../config/config.json');
 
 exports.run = async (client, msg, args) => {
-  // sendHelp
   if (args.find(arg => (arg.name === 'help' || arg.name === 'h') && arg.value.toString() === 'true')) {
     return msg.channel.send(new Discord.MessageEmbed()
-      .setTitle('.avatar')
+      .setTitle(`${ config.prefix }avatar`)
       .setDescription('Ao fornecer um usuário ou uma imagem, retorna uma montagem fazendo ``Análise``.')
       .addField('**Aliases**', 'Não possui aliases.', true)
       .addField('**Argumentos**', '``Usuário (user)``\n``Imagem (link/image)``', true)
-      .addField('**Como usar**', '``analise [usuário | imagem]``')
+      .addField('**Como usar**', `\`\`${ config.prefix }analise [usuário | imagem]\`\``)
       .addField('**Permissão**', '``Todos``', true)
-      .setColor('#ff81f8')
-      .setFooter('.help')
+      .setColor(config.botColor)
+      .setFooter(`${ config.prefix }help`)
     );
   }
   
@@ -48,6 +47,7 @@ exports.run = async (client, msg, args) => {
   return msg.channel.send(new Discord.MessageEmbed()
     .setTitle('Análise')
     .attachFiles(attachment)
+    .setColor(config.botColor)
     .setImage('attachment://analise.png')
   );
 };

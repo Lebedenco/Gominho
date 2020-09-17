@@ -1,19 +1,13 @@
 {
-  "name": "diegobotjs",
+  "name": "gominho",
   "version": "1.0.0",
-  "description": "Discord bot for personal use.",
+  "description": "Bot pessoal do Video Gomes.",
   "main": "bot.js",
   "dependencies": {
-    "axios": "^0.19.2",
     "canvas": "^2.6.1",
     "canvas-text-wrapper": "^0.10.2",
-    "danbooru": "^3.1.0",
     "discord.js": "^12.1.1",
     "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "feedparser": "^2.2.9",
-    "jikan-node": "^1.2.0",
-    "node-cron": "^2.0.3",
     "request": "^2.88.2",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0"
@@ -24,7 +18,8 @@
   },
   "keywords": [
     "bot",
-    "discord"
+    "discord",
+    "video gomes"
   ],
   "author": "Diego Lebedenco",
   "license": "ISC"

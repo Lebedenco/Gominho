@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
-require('dotenv').config();
 const io = require('socket.io-client');
+require('dotenv').config();
 
 const socket = io('http://pokebreed.herokuapp.com/', {
   reconnection: true, // whether to reconnect automatically
@@ -18,7 +18,7 @@ const client = new Discord.Client({
 });
 
 const token = process.env.TOKEN;
-const diegoId = process.env.DIEGOID;
+const ownerID = config.ownerID;
 
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
@@ -26,10 +26,10 @@ client.aliases = new Discord.Collection();
 const loadCommands = () => {
   const fs = require('fs');
 
-  let files = fs.readdirSync(__dirname + '/comandos');
+  let files = fs.readdirSync(__dirname + '/commands');
 
   files.forEach(file => {
-    let command = require(`./comandos/${file}`);
+    let command = require(`./commands/${ file }`);
 
     client.commands.set(command.help.name, command);
 
@@ -44,10 +44,10 @@ const loadCommands = () => {
 const loadEvents = () => {
   const fs = require('fs');
 
-  let files = fs.readdirSync(__dirname + '/eventos');
+  let files = fs.readdirSync(__dirname + '/events');
 
   files.forEach(file => {
-    let events = require(`./eventos/${file}`);
+    let events = require(`./events/${file}`);
 
     if (!Array.isArray(events)) {
       events = [events];
@@ -63,24 +63,20 @@ const start = async () => {
   console.log(utils.getHoraAtual() + ' [INICIALIZAÇÃO] Iniciando...');
 
   await client.login(token).catch(err => {
-    console.error(utils.getHoraAtual() + '[LOGIN] ', err);
+    console.error(utils.getHoraAtual() + ' [LOGIN] ', err);
 
     process.exit();
   });
 
-  console.log(utils.getHoraAtual() + '[INICIALIZAÇÃO] Carregando eventos...');
+  console.log(utils.getHoraAtual() + ' [INICIALIZAÇÃO.Events.load] Carregando eventos...');
   loadEvents();
 
-  console.log(utils.getHoraAtual() + '[INICIALIZAÇÃO] Carregando comandos...');
+  console.log(utils.getHoraAtual() + ' [INICIALIZAÇÃO.Commands.load] Carregando comandos...');
   loadCommands();
 
-  console.log(utils.getHoraAtual() + '[INICIALIZAÇÃO] Iniciando conexão com Pokébreed.socket...');
+  console.log(utils.getHoraAtual() + ' [INICIALIZAÇÃO.Socket.connect] Iniciando conexão com Pokébreed...');
 
-  //const diego = await client.users.fetch(diegoId);
-  //const igor = await client.users.fetch('258038107528626176');
-
-  //igor.send(`NOVO FOLLOW: ${ follow.name } às ${ utils.getHoraAtual() }`);
-  //diego.send(`NOVO FOLLOW: ${ follow.name } às ${ utils.getHoraAtual() }`);
+  const owner = await client.users.fetch(ownerID);
 
   socket.on('connect', () => {
     console.log(socket.connected);
@@ -92,7 +88,7 @@ const start = async () => {
     });
 
     socket.on('report', report => {
-      diego.send(new Discord.MessageEmbed()
+      owner.send(new Discord.MessageEmbed()
         .setTitle(`Bug Report de: ${report.reporterName}`)
         .setDescription(report.report)
         .setTimestamp(report.time)

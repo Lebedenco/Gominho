@@ -1,19 +1,19 @@
 const Discord = require('discord.js');
 
 const utils = require('../utils/utils');
+const config = require('../config/config.json');
 
 exports.run = (client, msg, args, commandFlag) => {
-  // sendHelp
   if (args.length > 0 && args.find(arg => (arg.name === 'help' || arg.name === 'h') && arg.value.toString() === 'true')) {
     return msg.channel.send(new Discord.MessageEmbed()
-      .setTitle('.avatar')
+      .setTitle(`${ config.prefix }avatar`)
       .setDescription('Retorna o avatar de um dado usuário, ou o seu próprio avatar caso não forneça argumento.')
       .addField('**Aliases**', '``av``', true)
       .addField('**Argumentos**', '``Usuário (user)``', true)
-      .addField('**Como usar**', '``avatar [usuário]``')
+      .addField('**Como usar**', `\`\`${ config.prefix }avatar [usuário]\`\``)
       .addField('**Permissão**', '``Todos``', true)
-      .setColor('#ff81f8')
-      .setFooter('.help')
+      .setColor(config.botColor)
+      .setFooter(`${ config.prefix }help`)
     );
   }
 
@@ -51,9 +51,9 @@ exports.run = (client, msg, args, commandFlag) => {
   }
 
   if (!commandFlag) {
-    return msg.channel.send(`${url}?size=${size}`.replace('webp', format));
+    return msg.channel.send(`${ url }?size=${ size }`.replace('webp', format));
   } else {
-    return `${url}?size=${size}`.replace('webp', format);
+    return `${url}?size=${ size }`.replace('webp', format);
   }
 };
 

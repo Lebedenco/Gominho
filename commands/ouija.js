@@ -1,19 +1,19 @@
 const Discord = require('discord.js');
 
 const utils = require('../utils/utils');
+const config = require('../config/config.json');
 
 exports.run = (client, msg, args) => {
-  // sendHelp
   if (args.find(arg => (arg.name === 'help' || arg.name === 'h') && arg.value.toString() === 'true')) {
     return msg.channel.send(new Discord.MessageEmbed()
-      .setTitle('.ouija')
+      .setTitle(`${ config.prefix }ouija`)
       .setDescription('Retorna uma resposta estilo Ouija para uma pergunta.')
       .addField('**Aliases**', '``Não possui aliases``', true)
       .addField('**Argumentos**', '``Pergunta (string)``', true)
-      .addField('**Como usar**', '``ouija [pergunta]``')
+      .addField('**Como usar**', `\`\`${ config.prefix }ouija [pergunta]\`\``)
       .addField('**Permissão**', '``Todos``', true)
-      .setColor('#ff81f8')
-      .setFooter('.help')
+      .setColor(config.botColor)
+      .setFooter(`${ config.prefix }help`)
     );
   }
 
